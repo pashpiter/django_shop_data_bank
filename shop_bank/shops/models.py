@@ -7,6 +7,9 @@ from .validators import validate_time
 class City(models.Model):
     city_name = models.CharField(verbose_name='Название города',
                                  max_length=30)
+    
+    def __str__(self):
+        return f'{self.name}'
 
 
 class Street(models.Model):
@@ -15,6 +18,9 @@ class Street(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE,
                              related_name='streets',
                              verbose_name='Город')
+    
+    def __str__(self):
+        return f'{self.name}'
 
 
 class Shop(models.Model):
@@ -31,3 +37,6 @@ class Shop(models.Model):
                                  validators=(validate_time,))
     time_close = models.TimeField(verbose_name='Время закрытия',
                                   validators=(validate_time,))
+    
+    def __str__(self):
+        return f'{self.name}'
