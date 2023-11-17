@@ -8,8 +8,8 @@ class CityModelTests(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        cls.city = City.objects.create(city_name='Las Venturas')
-        cls.city_name_field = cls.city._meta.get_field('city_name')
+        cls.city = City.objects.create(name='Las Venturas')
+        cls.city_name_field = cls.city._meta.get_field('name')
 
     def test_verbose_name_city(self):
         real_verbose_name = getattr(self.city_name_field, 'verbose_name')
@@ -27,15 +27,15 @@ class StreetModelTests(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        cls.city = City.objects.create(city_name='Las Venturas')
-        cls.street = Street.objects.create(street_name='Столичная улица',
+        cls.city = City.objects.create(name='Las Venturas')
+        cls.street = Street.objects.create(name='Столичная улица',
                                            city=cls.city)
-        cls.street_name_field = cls.street._meta.get_field('street_name')
+        cls.street_name_field = cls.street._meta.get_field('name')
         cls.street_city_field = cls.street._meta.get_field('city')
 
     def test_verbose_name_street(self):
         field_verboses = {
-            'street_name': 'Название улицы',
+            'name': 'Название улицы',
             'city': 'Город',
         }
         street = StreetModelTests.street
@@ -68,15 +68,17 @@ class ShopModelTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         """Добавление данных в БД"""
-        cls.city = City.objects.create(city_name='Las Venturas')
-        cls.street = Street.objects.create(street_name='Столичная улица',
+        cls.city = City.objects.create(name='Las Venturas')
+        cls.street = Street.objects.create(name='Столичная улица',
                                            city=cls.city)
-        cls.shop = Shop.objects.create(shop_name='Abibas',
+        cls.shop = Shop.objects.create(name='Abibas',
+                                       city=cls.city,
                                        street=cls.street,
                                        house_number=123,
                                        time_open='12:00',
                                        time_close='22:00')
-        cls.shop_name_field = cls.shop._meta.get_field('shop_name')
+        cls.shop_name_field = cls.shop._meta.get_field('name')
+        cls.shop_city_field = cls.shop._meta.get_field('city')
         cls.shop_street_field = cls.shop._meta.get_field('street')
         cls.shop_house_field = cls.shop._meta.get_field('house_number')
         cls.shop_time_open_field = cls.shop._meta.get_field('time_open')
@@ -84,7 +86,8 @@ class ShopModelTests(TestCase):
 
     def test_verbose_names_shop(self):
         field_verboses = {
-            'shop_name': 'Название магазина',
+            'name': 'Название магазина',
+            'city': 'Город',
             'street': 'Улица',
             'house_number': 'Номер дома',
             'time_open': 'Время открытия',
@@ -101,6 +104,15 @@ class ShopModelTests(TestCase):
         real_max_length = getattr(self.shop_name_field, 'max_length')
         self.assertTrue(real_max_length,
                         'Проверьте max_length у shop_name в модели Shop')
+
+    def test_city_on_delete_shop(self):
+        self.assertTrue(self.shop_city_field._check_on_delete,
+                        'Проверьте on_delete_mode у city '
+                        'в модели Shop')
+
+    def test_city_related_name_shop(self):
+        self.assertTrue(self.shop_city_field._related_name,
+                        'Проверьте related_name у city в модели Shop')
 
     def test_street_on_delete_shop(self):
         self.assertTrue(self.shop_street_field._check_on_delete,
