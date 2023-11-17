@@ -13,12 +13,8 @@ class AdminStreet(admin.ModelAdmin):
 
 
 class AdminShop(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'get_city', 'street', 'house_number',
+    list_display = ('pk', 'name', 'city', 'street', 'house_number',
                     'time_open', 'time_close')
-
-    def get_city(self, obj):
-        return obj
-    get_city.short_description = 'Город'
 
 
 admin.site.register(City, AdminCity)

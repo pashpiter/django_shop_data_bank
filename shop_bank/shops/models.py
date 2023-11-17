@@ -26,6 +26,9 @@ class Street(models.Model):
 class Shop(models.Model):
     name = models.CharField(verbose_name='Название магазина',
                             max_length=30)
+    city = models.ForeignKey(City, on_delete=models.CASCADE,
+                             related_name='shops',
+                             verbose_name='Город')
     street = models.ForeignKey(Street, on_delete=models.CASCADE,
                                related_name='shops',
                                verbose_name='Улица')
@@ -37,9 +40,6 @@ class Shop(models.Model):
                                  validators=(validate_time,))
     time_close = models.TimeField(verbose_name='Время закрытия',
                                   validators=(validate_time,))
-
-    def get_city(self):
-        return self.street.city
 
     def __str__(self):
         return f'{self.name}'
