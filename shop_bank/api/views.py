@@ -1,10 +1,10 @@
-from datetime import datetime
-
 from rest_framework import mixins, views, viewsets
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 
 from .serializers import CitySerializer, StreetSerializer, ShopSerializer
+from .utils import open_or_close_query_filter
+from .validators import validate_input_params_city_street_open
 from shops.models import City, Street, Shop
 
 
@@ -40,14 +40,13 @@ class ShopModelViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         city = self.request.query_params.get('city', False)
         street = self.request.query_params.get('street', False)
-        opn = int(self.request.query_params.get('open', 0))
+        opn = self.request.query_params.get('open', None)
+        validate_input_params_city_street_open(city, street, opn)
         query = self.queryset.all()
         query = query.filter(city__name=city) if city else query
         query = query.filter(street__name=street) if street else query
-        now = datetime.now().time()
-        query = query.filter(
-            time_open__lte=now, time_close__gt=now
-        ) if opn else query
+        query = open_or_close_query_filter(
+            query, opn) if opn is not None else query
         return query
 
     def create(self, request, *args, **kwargs):
