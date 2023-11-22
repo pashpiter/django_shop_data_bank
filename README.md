@@ -88,10 +88,8 @@ curl -X POST \
 ##### Тесты
 * Для запуска тестов используйте команду:
 ```
-python manage.py test
+sudo docker-compose exec app python manage.py test
 ```
-Или
-```pytest```
 
 
 #### Pavel Drovnin [@pashpiter](http://t.me/pashpiter)
