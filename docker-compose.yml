@@ -30,6 +30,7 @@ services:
       - PASSWORD=postgres
       - HOST=db
       - PORT=5432
+    restart: always
 
 volumes:
   postgres_data:
