@@ -1,0 +1,36 @@
+version: '3.9'
+
+services:
+
+  db:
+    image: postgres:13.0-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  app:
+    depends_on:
+      - db
+    build: ./shop_bank
+    ports:
+      - 8000:8000
+    command: bash -c "./manage.py migrate && ./manage.py loaddata data_dump.json && ./manage.py collectstatic --no-input && ./manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - static_value:/app/static/
+    environment:
+      - D=1
+      - ENGINE=django.db.backends.postgresql
+      - NAME=postgres
+      - USER=postgres
+      - PASSWORD=postgres
+      - HOST=db
+      - PORT=5432
+
+volumes:
+  postgres_data:
+  static_value:
