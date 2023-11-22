@@ -23,7 +23,7 @@ services:
     volumes:
       - static_value:/app/static/
     environment:
-      - D=1
+      - D=0
       - ENGINE=django.db.backends.postgresql
       - NAME=postgres
       - USER=postgres
