@@ -1,7 +1,7 @@
 # django_shop_data_bank
 
 
-##### Стек: Python, Django, Postgresql
+##### Стек: Python, Django, sqlite3
 ***
 
 ### Что умеет django_shop_data_bank
@@ -18,30 +18,9 @@ git clone https://github.com/pashpiter/django_shop_data_bank.git
 ```
 * Перейти в папку django_shop_data_bank
 
-* Cоздать виртуальное окружение:
+* Запустить проект используя docker-compose
 ```
-python3 -m venv env
-```
-* Активировать виртуальное окружение
-Для Windows
-```
-source venv/scripts/activate
-```
-Для MacOS/Linux
-```
-source venv/bin/activate
-```
-* Установить зависимости из файла requirements.txt:
-```
-pip install -r requirements.txt
-```
-* Выполнить миграции:
-```
-python manage.py migrate
-```
-* Запустить проект на локальном сервере:
-```
-python manage.py runserver
+sudo docker-compose up -d
 ```
 
 ### Примеры команд API
@@ -54,10 +33,10 @@ curl "http://localhost:8000/"
 ```
 * Получение списка городов
 ```
-POST http://localhost:8000/city/
+GET http://localhost:8000/city/
 ```
 ```
-curl -X POST "http://localhost:8000/city/"
+curl -X GET "http://localhost:8000/city/"
 ```
 * Получение списка улиц города
 ```
@@ -79,6 +58,31 @@ GET http://localhost:8000/shop/?street={str}&city={str}&open={int(0/1)}
 ```
 ```
 curl "http://localhost:8000/shop/?street={str}&city={str}&open={int(0/1)}"
+```
+* Добавление магазина
+```
+POST http://localhost:8000/shop/
+{
+    "name": "str", (Shop)
+    "city": "str", (Los Santos)
+    "street": "str", (Main St)
+    "house_number": int, (11)
+    "time_open": "str", (9:00)
+    "time_close": "str" (21:00)
+}
+```
+```
+curl -X POST \
+--location 'http://localhost:8000/shop/' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "Pole",
+    "city": "Los Santos",
+    "street": "Main St",
+    "house_number": 1,
+    "time_open": "21:00",
+    "time_close": "9:00"
+}'
 ```
 
 ##### Тесты
