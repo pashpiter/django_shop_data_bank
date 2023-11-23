@@ -1,7 +1,7 @@
 # django_shop_data_bank
 
 
-##### Стек: Python, Django, sqlite3
+##### Стек: Python, Django, drf, pytest, postgresql, Docker
 ***
 
 ### Что умеет django_shop_data_bank
